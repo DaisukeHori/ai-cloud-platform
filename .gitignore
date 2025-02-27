@@ -1,0 +1,42 @@
+# 依存関係
+node_modules/
+.pnp
+.pnp.js
+
+# ビルド
+/dist
+/build
+/out
+/.next
+.cache/
+
+# 環境変数
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# ログ
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+logs
+*.log
+
+# エディタ
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# テスト
+/coverage
+
+# Docker
+.docker-data/
+
+# その他
+.DS_Store
+Thumbs.db

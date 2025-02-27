@@ -1,0 +1,117 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ユーザーモデル
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  name      String
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  projects       Project[]
+  chatHistory    ChatMessage[]
+  collaborations ProjectCollaborator[]
+}
+
+// プロジェクトモデル
+model Project {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  status      String   @default("active") // active, archived, deploying
+  deployedUrl String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  files        ProjectFile[]
+  chatHistory  ChatMessage[]
+  deployments  Deployment[]
+  collaborators ProjectCollaborator[]
+
+  @@index([userId])
+}
+
+// プロジェクトファイルモデル
+model ProjectFile {
+  id      String @id @default(uuid())
+  name    String
+  path    String
+  content String @db.Text
+  type    String // file, directory
+
+  projectId String
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  parentId String?
+  parent   ProjectFile?  @relation("FileHierarchy", fields: [parentId], references: [id], onDelete: Cascade)
+  children ProjectFile[] @relation("FileHierarchy")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([projectId, path])
+  @@index([projectId])
+  @@index([parentId])
+}
+
+// チャットメッセージモデル
+model ChatMessage {
+  id        String   @id @default(uuid())
+  role      String // user, assistant
+  content   String   @db.Text
+  createdAt DateTime @default(now())
+
+  userId    String
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  projectId String
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([projectId])
+}
+
+// デプロイメントモデル
+model Deployment {
+  id        String   @id @default(uuid())
+  status    String // pending, success, failed
+  logs      String?  @db.Text
+  url       String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  projectId String
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@index([projectId])
+}
+
+// プロジェクト共同作業者モデル
+model ProjectCollaborator {
+  id        String   @id @default(uuid())
+  role      String // owner, editor, viewer
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  projectId String
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([projectId, userId])
+  @@index([projectId])
+  @@index([userId])
+}
