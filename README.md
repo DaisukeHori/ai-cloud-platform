@@ -2,6 +2,10 @@
 
 ![バージョン](https://img.shields.io/badge/version-0.1.0-blue.svg)
 ![ライセンス](https://img.shields.io/badge/license-MIT-green.svg)
+![Node.js](https://img.shields.io/badge/node-v18+-brightgreen.svg)
+![TypeScript](https://img.shields.io/badge/typescript-v5.3-blue.svg)
+![React](https://img.shields.io/badge/react-v18.2-61DAFB.svg)
+![Docker](https://img.shields.io/badge/docker-ready-2496ED.svg)
 
 AIを活用したクラウド開発プラットフォームです。AIによるコード生成、改善、説明、テスト生成などの機能を提供し、開発者の生産性を向上させます。
 
@@ -14,8 +18,6 @@ AIを活用したクラウド開発プラットフォームです。AIによる�
 - [ディレクトリ構造](#ディレクトリ構造)
 - [前提条件](#前提条件)
 - [インストール手順](#インストール手順)
-  - [Docker環境](#docker環境)
-  - [ローカル開発環境](#ローカル開発環境)
 - [環境変数の設定](#環境変数の設定)
 - [使用方法](#使用方法)
 - [API仕様](#api仕様)
@@ -30,34 +32,239 @@ AIを活用したクラウド開発プラットフォームです。AIによる�
 
 AIクラウド開発プラットフォームは、AIを活用して開発者の生産性を向上させるためのツールです。コードの生成、改善、説明、テスト生成などの機能を提供し、開発プロセスを効率化します。また、リアルタイムコラボレーション機能やデプロイメント機能も備えており、チーム開発をサポートします。
 
+### プロジェクトの背景
+
+近年、AIの進化により、コード生成や最適化などの作業を自動化できるようになりました。しかし、これらのAI機能を開発ワークフローに統合するためのプラットフォームはまだ少なく、多くの開発者は複数のツールを組み合わせて使用しています。
+
+このプラットフォームは、AIコード支援機能、プロジェクト管理、コラボレーション、デプロイメントなどの機能を統合し、開発者が単一のプラットフォーム内で効率的に作業できるようにすることを目的としています。
+
+### ビジョンと目標
+
+**ビジョン**: AIの力を活用して、ソフトウェア開発の民主化を促進し、あらゆるスキルレベルの開発者がより速く、より良いコードを書けるようにする。
+
+**目標**:
+1. AIを活用したコード生成・改善機能により、開発速度を50%向上させる
+2. コラボレーション機能により、チーム間のコミュニケーションを効率化する
+3. 統合されたデプロイメント機能により、デプロイプロセスを簡素化する
+4. 初心者開発者の学習曲線を緩やかにし、プログラミングの敷居を下げる
+5. エンタープライズレベルのセキュリティと拡張性を提供する
+
 ## ✨ 主な機能
 
 ### AIコード支援機能
-- **コード生成**: 要件に基づいて、AIがコードを生成
-- **コード改善**: 既存のコードを最適化、リファクタリング
-- **コード説明**: 複雑なコードの動作を自然言語で説明
-- **テスト生成**: ユニットテスト、統合テストの自動生成
-- **ドキュメント生成**: コードからドキュメントを自動生成
-- **バグ修正提案**: エラーメッセージに基づいた修正案の提示
-- **セキュリティチェック**: コードのセキュリティ脆弱性を検出
 
-### プロジェクト管理機能
-- **プロジェクト作成・管理**: 複数プロジェクトの管理
-- **ファイル管理**: プロジェクト内のファイル操作
-- **バージョン管理**: 変更履歴の追跡
-- **チャット履歴**: AIとのやり取りの保存と検索
+#### コード生成
 
-### コラボレーション機能
-- **リアルタイム編集**: 複数ユーザーによる同時編集
-- **コメント・レビュー**: コードレビュー機能
-- **権限管理**: ユーザーごとの権限設定
+AIを活用して、自然言語の説明からコードを生成します。
 
-### デプロイメント機能
-- **自動デプロイ**: クラウドへの自動デプロイ
-- **デプロイ履歴**: デプロイの履歴管理
-- **ロールバック**: 以前のバージョンへの復元
+**詳細**:
+- **自然言語からコード生成**: 「ユーザー認証機能を実装して」のような自然言語の指示からコードを生成
+- **言語・フレームワーク指定**: 特定のプログラミング言語やフレームワークに最適化されたコードを生成
+- **コンテキスト認識**: プロジェクトの既存コードを考慮した生成
+- **複数の実装オプション**: 同じ要件に対して複数の実装案を提示
+
+**使用例**:
+```
+入力: "ユーザーがメールアドレスとパスワードで登録できるフォームを作成して、React と Formik を使用"
+
+出力:
+import React from 'react';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
+import * as Yup from 'yup';
+
+const RegisterSchema = Yup.object().shape({
+  email: Yup.string()
+    .email('無効なメールアドレスです')
+    .required('メールアドレスは必須です'),
+  password: Yup.string()
+    .min(8, 'パスワードは8文字以上である必要があります')
+    .required('パスワードは必須です'),
+  confirmPassword: Yup.string()
+    .oneOf([Yup.ref('password'), null], 'パスワードが一致しません')
+    .required('パスワード確認は必須です'),
+});
+
+const RegisterForm = () => {
+  const handleSubmit = (values, { setSubmitting }) => {
+    // APIリクエストなどの処理をここに記述
+    console.log(values);
+    setTimeout(() => {
+      setSubmitting(false);
+    }, 500);
+  };
+
+  return (
+    <div className="register-form">
+      <h2>ユーザー登録</h2>
+      <Formik
+        initialValues={{ email: '', password: '', confirmPassword: '' }}
+        validationSchema={RegisterSchema}
+        onSubmit={handleSubmit}
+      >
+        {({ isSubmitting }) => (
+          <Form>
+            <div className="form-group">
+              <label htmlFor="email">メールアドレス</label>
+              <Field type="email" name="email" className="form-control" />
+              <ErrorMessage name="email" component="div" className="error" />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="password">パスワード</label>
+              <Field type="password" name="password" className="form-control" />
+              <ErrorMessage name="password" component="div" className="error" />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="confirmPassword">パスワード確認</label>
+              <Field type="password" name="confirmPassword" className="form-control" />
+              <ErrorMessage name="confirmPassword" component="div" className="error" />
+            </div>
+
+            <button type="submit" disabled={isSubmitting} className="btn btn-primary">
+              {isSubmitting ? '送信中...' : '登録'}
+            </button>
+          </Form>
+        )}
+      </Formik>
+    </div>
+  );
+};
+
+export default RegisterForm;
+```
+
+#### コードの改善と最適化
+
+既存のコードを分析し、パフォーマンス、可読性、セキュリティなどの観点から改善案を提示します。
+
+**詳細**:
+- **パフォーマンス最適化**: 実行速度やメモリ使用量を改善
+- **コード品質向上**: 可読性、保守性、拡張性の向上
+- **ベストプラクティス適用**: 言語やフレームワークのベストプラクティスに準拠
+- **リファクタリング提案**: コードの構造を改善する提案
+
+**使用例**:
+```
+// 改善前のコード
+function calculateTotal(items) {
+  let total = 0;
+  for (let i = 0; i < items.length; i++) {
+    total = total + items[i].price * items[i].quantity;
+    if (items[i].discounted) {
+      total = total - (items[i].price * items[i].quantity * 0.1);
+    }
+  }
+  return total;
+}
+
+// AIによる改善後のコード
+function calculateTotal(items) {
+  return items.reduce((total, item) => {
+    const itemTotal = item.price * item.quantity;
+    const discount = item.discounted ? itemTotal * 0.1 : 0;
+    return total + itemTotal - discount;
+  }, 0);
+}
+```
+
+#### コードの説明
+
+複雑なコードを自然言語で説明し、理解を助けます。
+
+**詳細**:
+- **行ごとの説明**: コードの各行や重要な部分の詳細な説明
+- **アルゴリズム解説**: 使用されているアルゴリズムやデザインパターンの説明
+- **ビジュアル表現**: フローチャートや図による視覚的な説明
+- **関連ドキュメント参照**: 関連するライブラリやフレームワークのドキュメントへの参照
+
+**使用例**:
+```javascript
+// 説明対象のコード
+const memoizedFibonacci = (() => {
+  const cache = {};
+  return function fibonacci(n) {
+    if (n in cache) return cache[n];
+    if (n <= 1) return n;
+    return cache[n] = fibonacci(n - 1) + fibonacci(n - 2);
+  };
+})();
+```
+
+**AIによる説明**:
+```
+このコードはフィボナッチ数列を計算する関数を、メモ化（計算結果のキャッシュ）を使って最適化しています。
+
+1. まず、即時実行関数式（IIFE）を使用して、クロージャを作成しています。
+   - `(() => { ... })()` の形式で、定義と同時に実行されます。
+
+2. クロージャ内で `cache` オブジェクトを定義しています。
+   - このオブジェクトは外部からアクセスできず、関数内でのみ使用されます。
+   - 計算済みのフィボナッチ数を保存するためのキャッシュとして機能します。
+
+3. 内部で `fibonacci` 関数を定義し、それを返しています。
+   - この関数は引数 `n` を受け取り、n番目のフィボナッチ数を返します。
+
+4. 関数内では、まず `n in cache` でキャッシュにすでに計算結果があるかチェックします。
+   - あれば、その値をすぐに返します（計算の重複を避ける）。
+
+5. `n <= 1` の場合は、フィボナッチ数列の定義により、そのまま `n` を返します。
+   - F(0) = 0, F(1) = 1 という定義に基づいています。
+
+6. それ以外の場合は、再帰的に `fibonacci(n - 1) + fibonacci(n - 2)` を計算し、
+   その結果を `cache[n]` に保存してから返します。
+   - `cache[n] = ...` という代入式の結果が関数の戻り値になります。
+
+このメモ化アプローチにより、時間計算量は O(2^n) から O(n) に改善され、
+大きな n に対しても効率的に計算できるようになります。
+```
+
+#### テストコードの生成
+
+実装コードに対応するテストコードを自動生成します。
+
+**詳細**:
+- **ユニットテスト生成**: 関数やクラスのユニットテストを自動生成
+- **テストケース網羅**: エッジケースを含む複数のテストケースを生成
+- **モック・スタブ作成**: 依存関係のモックやスタブを自動生成
+- **テストフレームワーク対応**: Jest, Mocha, JUnitなど様々なテストフレームワークに対応
+
+**使用例**:
+```javascript
+// テスト対象の関数
+function validateEmail(email) {
+  if (!email || typeof email !== 'string') return false;
+  const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return regex.test(email);
+}
+
+// AIが生成したテストコード
+describe('validateEmail', () => {
+  test('有効なメールアドレスを検証できる', () => {
+    expect(validateEmail('user@example.com')).toBe(true);
+    expect(validateEmail('name.surname@domain.co.jp')).toBe(true);
+    expect(validateEmail('user-name@example.domain.com')).toBe(true);
+  });
+
+  test('無効なメールアドレスを検出できる', () => {
+    expect(validateEmail('invalid-email')).toBe(false);
+    expect(validateEmail('missing@domain')).toBe(false);
+    expect(validateEmail('with spaces@domain.com')).toBe(false);
+    expect(validateEmail('missing.domain@.com')).toBe(false);
+  });
+
+  test('エッジケースを適切に処理できる', () => {
+    expect(validateEmail('')).toBe(false);
+    expect(validateEmail(null)).toBe(false);
+    expect(validateEmail(undefined)).toBe(false);
+    expect(validateEmail(123)).toBe(false);
+  });
+});
+```
 
 ## 🏗 システムアーキテクチャ
+
+### 全体アーキテクチャ
 
 システムは以下の主要コンポーネントで構成されています：
 
@@ -83,30 +290,58 @@ AIクラウド開発プラットフォームは、AIを活用して開発者の�
 - **データベース**: ユーザー情報、プロジェクト情報、ファイル情報などを保存
 - **AIサービス**: OpenAI APIなどの外部AIサービスと連携
 
+### コンポーネント間の連携
+
+各コンポーネント間の連携は以下のように行われます：
+
+1. **フロントエンド ⟷ バックエンド**:
+   - RESTful APIを使用した通信
+   - WebSocketを使用したリアルタイム通信
+   - JWT認証による安全な通信
+
+2. **バックエンド ⟷ データベース**:
+   - Prisma ORMを使用したデータアクセス
+   - トランザクション管理による整合性の確保
+   - コネクションプールによる効率的な接続管理
+
+3. **バックエンド ⟷ AIサービス**:
+   - HTTPSを使用した安全な通信
+   - APIキーによる認証
+   - レート制限の管理
+   - フォールバック機構による可用性の確保
+
 ## 🛠 技術スタック
 
-### バックエンド
-- **言語**: TypeScript
-- **フレームワーク**: Node.js, Express
-- **データベース**: PostgreSQL
+### バックエンド技術
+
+- **言語**: TypeScript 5.3
+- **ランタイム**: Node.js 18+
+- **フレームワーク**: Express 4.18
+- **ORM**: Prisma 5.7
+- **認証**: JWT (jsonwebtoken 9.0)
+- **バリデーション**: express-validator 7.0
+- **リアルタイム通信**: Socket.IO 4.7
+- **ロギング**: Winston 3.11
+- **ファイル操作**: Multer 1.4
+
+### フロントエンド技術
+
+- **言語**: TypeScript 5.3
+- **フレームワーク**: React 18.2
+- **状態管理**: React Query 5.17
+- **UIライブラリ**: Chakra UI 2.8
+- **ルーティング**: React Router 6.21
+- **フォーム**: Formik + Yup
+- **HTTPクライアント**: Axios 1.6
+- **コードエディタ**: Monaco Editor 4.6
+- **アニメーション**: Framer Motion 10.18
+
+### データベース技術
+
+- **RDBMS**: PostgreSQL 15
 - **ORM**: Prisma
-- **認証**: JWT
-- **リアルタイム通信**: Socket.IO
-- **テスト**: Jest
-
-### フロントエンド
-- **言語**: TypeScript
-- **フレームワーク**: React
-- **状態管理**: React Query
-- **UIライブラリ**: Chakra UI
-- **ルーティング**: React Router
-- **エディタ**: Monaco Editor
-- **テスト**: Jest, React Testing Library
-
-### インフラ
-- **コンテナ化**: Docker, Docker Compose
-- **CI/CD**: GitHub Actions
-- **デプロイ**: AWS, Heroku, Vercel など
+- **マイグレーション**: Prisma Migrate
+- **シード**: Prisma Seed
 
 ## 📁 ディレクトリ構造
 
@@ -147,11 +382,16 @@ ai-cloud-platform/
 
 ## 📋 前提条件
 
+### 必要なソフトウェア
+
 - Docker と Docker Compose (Docker環境の場合)
 - Node.js v18以上 (ローカル開発環境の場合)
 - npm v9以上 (ローカル開発環境の場合)
 - PostgreSQL (ローカル開発環境の場合)
-- OpenAI API キー
+
+### 必要なアカウント
+
+- OpenAI API アカウント (APIキーが必要)
 - GitHub アカウント (GitHub連携機能を使用する場合)
 
 ## 🚀 インストール手順
@@ -182,13 +422,7 @@ docker-compose up -d
 docker-compose logs -f
 ```
 
-4. マイグレーションの実行（初回のみ）
-```bash
-# バックエンドコンテナ内でマイグレーションを実行
-docker-compose exec backend npx prisma migrate deploy
-```
-
-5. アクセス
+4. アクセス
 - フロントエンド: http://localhost
 - バックエンドAPI: http://localhost/api
 - WebSocket: http://localhost/socket.io
@@ -506,17 +740,6 @@ git push heroku main
 heroku run npx prisma migrate deploy
 ```
 
-### AWS EC2へのデプロイ
-
-1. EC2インスタンスを起動
-2. SSHでインスタンスに接続
-3. Dockerをインストール
-4. リポジトリをクローン
-5. 環境変数を設定
-6. Docker Composeでコンテナを起動
-
-詳細な手順は[AWS EC2デプロイガイド](docs/aws-deployment.md)を参照してください。
-
 ## 🔧 トラブルシューティング
 
 ### よくある問題と解決策
@@ -535,6 +758,12 @@ docker-compose up -d
 ```
 
 **問題**: データベース接続エラー
+**解決策**:
+```bash
+# データベースコンテナが起動しているか確認
+ps ps
+```
+# データベース接続エラー
 **解決策**:
 ```bash
 # データベースコンテナが起動しているか確認
@@ -590,16 +819,86 @@ docker-compose logs frontend
 4. ブランチにプッシュ (`git push origin feature/amazing-feature`)
 5. プルリクエストを作成
 
+### 開発フロー
+
+1. **イシューの作成**: 新機能や修正を実装する前に、まずイシューを作成して議論します。
+2. **ブランチの命名規則**:
+   - 機能追加: `feature/機能名`
+   - バグ修正: `fix/バグ名`
+   - リファクタリング: `refactor/対象名`
+   - ドキュメント: `docs/対象名`
+3. **コミットメッセージの規則**:
+   - 追加: `feat: 機能の説明`
+   - 修正: `fix: バグの説明`
+   - リファクタリング: `refactor: 変更の説明`
+   - ドキュメント: `docs: 変更の説明`
+4. **レビュープロセス**: プルリクエストは少なくとも1人のレビュアーによる承認が必要です。
+5. **CI/CDパイプライン**: プルリクエストはCI/CDパイプラインを通過する必要があります。
+
 ### コーディング規約
 
-- TypeScriptの型を適切に使用する
-- ESLintとPrettierのルールに従う
-- テストを書く
-- コミットメッセージは明確に
+- **TypeScript**: [Google TypeScript Style Guide](https://google.github.io/styleguide/tsguide.html)に従う
+- **React**: [Airbnb React/JSX Style Guide](https://github.com/airbnb/javascript/tree/master/react)に従う
+- **コメント**: 複雑なロジックには必ずコメントを追加
+- **テスト**: 新機能には必ずテストを追加
+
+### プルリクエスト手順
+
+1. フォークしたリポジトリを最新の状態に更新
+```bash
+git remote add upstream https://github.com/original-owner/ai-cloud-platform.git
+git fetch upstream
+git checkout main
+git merge upstream/main
+```
+
+2. 新しいブランチを作成
+```bash
+git checkout -b feature/your-feature-name
+```
+
+3. 変更を実装し、テストを追加
+
+4. 変更をコミット
+```bash
+git add .
+git commit -m "feat: Add your feature"
+```
+
+5. ブランチにプッシュ
+```bash
+git push origin feature/your-feature-name
+```
+
+6. GitHubでプルリクエストを作成
 
 ## 📄 ライセンス
 
 このプロジェクトはMITライセンスの下で公開されています。詳細は[LICENSE](LICENSE)ファイルを参照してください。
+
+```
+MIT License
+
+Copyright (c) 2025 AIクラウド開発プラットフォーム
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+```
 
 ## 📞 連絡先
 
