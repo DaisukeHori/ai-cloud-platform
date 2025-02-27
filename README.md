@@ -160,7 +160,7 @@ ai-cloud-platform/
 
 1. リポジトリをクローン
 ```bash
-git clone https://github.com/yourusername/ai-cloud-platform.git
+git clone https://github.com/daisukehori/ai-cloud-platform.git
 cd ai-cloud-platform
 ```
 
