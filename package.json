@@ -32,7 +32,7 @@
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.37.0",
-    "@aws-sdk/client-bedrock-runtime": "^3.755.0",
+    "@aws-sdk/client-bedrock-runtime": "^3.1166.0",
     "axios": "^1.8.1",
     "openai": "^4.85.4",
     "stripe": "^17.7.0"
